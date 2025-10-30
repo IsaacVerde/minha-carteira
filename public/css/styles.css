@@ -1,0 +1,131 @@
+/* ===================================================================
+   public/css/styles.css - Estilos Customizados e Overrides
+   =================================================================== */
+
+/* --- VARIÁVEIS (PADRÃO DE CORES) --- */
+/* Sobrescreve as variáveis do Bootstrap para definir o azul e o vermelho */
+:root {
+    --bs-primary: #007bff; /* Azul profissional para Receita, Botões Primários */
+    --bs-danger: #dc3545;  /* Vermelho profissional para Despesa, Botões de Perigo */
+    --color-border: #dee2e6; /* Cor padrão para bordas leves (usada em h2 e tabelas) */
+    --bs-text-primary: #212529; /* Cor padrão do texto (quase preto) */
+}
+
+
+/* --- LAYOUT E CABEÇALHO --- */
+
+/* 1. Estilo para o cabeçalho (Bem-vindo e Botão Sair) */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    gap: 20px; /* Garante espaçamento entre o título e o botão */
+}
+
+
+/* --- TIPOGRAFIA DO RESUMO (CARDS) --- */
+
+/* Ajuste de Fonte Grande para os valores totais */
+.valor-receita, 
+.valor-despesa, 
+.valor-saldo { 
+    font-weight: 700; 
+    font-size: 2.2em; /* Tamanho grande para destaque */
+}
+
+/* Garante a cor azul para Receita e Saldos positivos */
+.valor-receita, .color-blue { 
+    color: var(--bs-primary) !important; 
+}
+
+/* Garante a cor vermelha para Despesa e Saldos negativos */
+.valor-despesa, .color-red { 
+    color: var(--bs-danger) !important; 
+}
+
+
+/* --- TABELAS E SEÇÕES --- */
+
+/* Cores da Tabela de Transações */
+.row-receita {
+    color: var(--bs-primary); /* Cor do texto da linha */
+    font-weight: 500;
+}
+.row-despesa {
+    color: var(--bs-text-primary); /* Cor padrão do texto */
+    font-weight: 500;
+}
+
+/* Estilização dos Títulos de Seção (h2) */
+h2 {
+    font-size: 1.6em;
+    font-weight: 600;
+    margin-top: 3rem; /* Utiliza margem de espaçamento padrão do Bootstrap (mt-5) */
+    margin-bottom: 0.5rem; /* Espaço após o título */
+}
+
+/* Garante que o card tenha um padding interno consistente */
+.card-body {
+    padding: 1.5rem !important;
+}
+
+
+/* --- GRÁFICOS --- */
+
+/* Garante que o gráfico seja responsivo dentro do card */
+#google_chart_div, #expensesChart {
+    width: 100% !important;
+    max-height: 400px;
+}
+
+/* --- RESPONSIVIDADE EM TELAS PEQUENAS (max-width: 768px) --- */
+
+@media (max-width: 768px) {
+    /* 1. Ajustes Gerais */
+    .container {
+        padding: 0 10px; 
+    }
+    
+    /* 2. Cabeçalho */
+    .header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+        padding-bottom: 10px;
+    }
+
+    /* Reduz o tamanho da fonte do h1 */
+    .header h1 {
+        font-size: 1.5rem;
+    }
+
+    /* Reduz o tamanho da fonte dos títulos das seções */
+    h2, .h4 {
+        font-size: 1.5rem;
+    }
+
+    /* 3. Valores do Resumo */
+    .valor-receita, 
+    .valor-despesa, 
+    .valor-saldo {
+        font-size: 1.8em; /* Reduz ligeiramente os valores para caberem melhor */
+    }
+
+    /* 4. Filtros */
+    /* Garante que o input de mês ocupe a largura total no mobile */
+    .card-body .form-control {
+        width: 100% !important;
+    }
+    /* Força os botões do filtro rápido a quebrar linha e ocupar a largura total */
+    .d-flex.flex-wrap.gap-2.align-items-center > a {
+        flex-grow: 1;
+        text-align: center;
+    }
+
+    /* 5. Login/Registro (na tela inicial) */
+    .container.vh-100 .row {
+        width: 100% !important;
+        margin: 0;
+    }
+}
