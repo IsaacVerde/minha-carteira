@@ -57,9 +57,17 @@ h2 {
 
 
 /* --- GRÁFICOS --- */
+
+/* 🛑 MUDANÇA PRINCIPAL AQUI */
 #google_chart_div, #expensesChart {
     width: 100% !important;
     max-height: 400px;
+    
+    /* "Corta" qualquer conteúdo que vazar para fora da div */
+    overflow: hidden !important; 
+    
+    /* Tenta centralizar a div (ajuda em alguns casos) */
+    margin: 0 auto;
 }
 
 /* --- RESPONSIVIDADE EM TELAS PEQUENAS (max-width: 768px) --- */
@@ -109,7 +117,6 @@ h2 {
     #google_chart_div {
         height: 300px !important; 
     }
-    /* 🛑 MUDANÇA: REMOVI A REGRA 'display: flex' DAQUI. */
 
 
     /* 7. Filtros */

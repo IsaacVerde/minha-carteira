@@ -39,7 +39,7 @@ function drawChart() {
             colors: ['#007bff', '#dc3545'], // Azul (Receita), Vermelho (Despesa)
             backgroundColor: 'transparent', 
             
-            // 🛑 MUDANÇA: Usando PIXELS fixos. Isso é mais estável.
+            // 🛑 USA PIXELS FIXOS. É a única forma estável.
             chartArea: { 
                 left: 50,    // <-- Deixa 50px para o "Valor (R$)"
                 top: 40,     // <-- Deixa 40px para a Legenda
@@ -71,13 +71,11 @@ function drawChart() {
     }
 }
 
-// 7. 🛑 MUDANÇA: Função que PREPARA o gráfico e o torna responsivo
+// 7. 🛑 Função que PREPARA o gráfico e o torna responsivo
 function setupChart() {
     // Desenha o gráfico pela primeira vez
     drawChart();
     
-    // Adiciona um "ouvinte" que chama 'drawChart'
-    // toda vez que a janela do navegador mudar de tamanho.
-    // Isso é o que torna o gráfico responsivo.
+    // Adiciona o "ouvinte" de redimensionamento
     window.addEventListener('resize', drawChart);
 }
