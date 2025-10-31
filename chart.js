@@ -8,17 +8,17 @@ google.charts.setOnLoadCallback(setupChart);
 
 // 3. Define a função que desenha o gráfico
 function drawChart() {
-    // 3. Pega os dados do EJS (lendo do atributo data-*)
+    // Pega os dados do EJS (lendo do atributo data-*)
     const dataElement = document.getElementById('chart-data');
     if (!dataElement) {
-        console.error("Elemento 'chart-data' não encontrado.");
+        // Se não houver dados (ex: nenhuma transação), não faz nada.
         return; 
     }
 
     const fluxoDataString = dataElement.getAttribute('data-fluxocaixa');
     const fluxoData = JSON.parse(fluxoDataString || '[]'); // Converte a string
 
-    // 4. Formata os dados para o Google Charts (Array de Arrays)
+    // Formata os dados para o Google Charts (Array de Arrays)
     const dataArray = [['Categoria', 'Receitas', 'Despesas']];
     
     // Só executa se tiver dados
@@ -33,13 +33,13 @@ function drawChart() {
 
         const data = google.visualization.arrayToDataTable(dataArray);
 
-        // 5. 🛑 MUDANÇA: Opções de Estilo (COM PIXELS FIXOS PARA ESTABILIDADE)
+        // Opções de Estilo (com pixels fixos para estabilidade)
         const options = {
             legend: { position: 'top', textStyle: { color: '#495057' } },
             colors: ['#007bff', '#dc3545'], // Azul (Receita), Vermelho (Despesa)
             backgroundColor: 'transparent', 
             
-            // 🛑 USA PIXELS FIXOS. É a única forma estável.
+            // Margens internas (em pixels) para o gráfico não cortar
             chartArea: { 
                 left: 50,    // <-- Deixa 50px para o "Valor (R$)"
                 top: 40,     // <-- Deixa 40px para a Legenda
@@ -60,22 +60,21 @@ function drawChart() {
             bar: { groupWidth: '80%' }
         };
 
-        // 6. Encontra a div e desenha o gráfico
+        // Encontra a div e desenha o gráfico
         const chartElement = document.getElementById('google_chart_div');
         if (chartElement) {
             const chart = new google.visualization.ColumnChart(chartElement);
             chart.draw(data, options);
-        } else {
-            console.error("Elemento 'google_chart_div' não encontrado para desenhar o gráfico.");
         }
     }
 }
 
-// 7. 🛑 Função que PREPARA o gráfico e o torna responsivo
+// 4. 🛑 Função que PREPARA o gráfico e o torna responsivo
 function setupChart() {
     // Desenha o gráfico pela primeira vez
     drawChart();
     
     // Adiciona o "ouvinte" de redimensionamento
+    // Isso força o gráfico a se redesenhar quando a janela muda.
     window.addEventListener('resize', drawChart);
 }

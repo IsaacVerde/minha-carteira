@@ -58,11 +58,18 @@ h2 {
 
 /* --- GRÁFICOS --- */
 
-/* 🛑 MUDANÇA: REMOVI o 'overflow: hidden' daqui */
+/* 🛑 MUDANÇA: Adiciona a barra de rolagem para o wrapper do gráfico */
+.chart-scroll-wrapper {
+    width: 100%;
+    overflow-x: auto !important; /* Força a barra de rolagem horizontal */
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch; /* Melhora a rolagem em iOS */
+}
+
+/* Garante que a div interna não tenha conflito */
 #google_chart_div, #expensesChart {
     width: 100% !important;
     max-height: 400px;
-    margin: 0 auto;
 }
 
 /* --- RESPONSIVIDADE EM TELAS PEQUENAS (max-width: 768px) --- */

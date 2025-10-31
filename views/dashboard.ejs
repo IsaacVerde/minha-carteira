@@ -201,10 +201,13 @@
                     <div class="card shadow-sm h-100">
                         <div class="card-body">
                             <% if (locals.fluxoDeCaixaPorCategoria && locals.fluxoDeCaixaPorCategoria.length > 0) { %>
+                                
                                 <div id="chart-data" data-fluxocaixa='<%- JSON.stringify(fluxoDeCaixaPorCategoria) %>'></div>
                                 
-                                <div style="width: 100%; overflow-x: auto !important;">
+                                <div class="chart-scroll-wrapper">
+                                
                                     <div id="google_chart_div" style="height: 350px; min-width: 500px; width: 100%;"></div> 
+                                
                                 </div>
 
                             <% } else { %>
