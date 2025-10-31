@@ -201,7 +201,12 @@
                     <div class="card shadow-sm h-100">
                         <div class="card-body">
                             <% if (locals.fluxoDeCaixaPorCategoria && locals.fluxoDeCaixaPorCategoria.length > 0) { %>
-                                <div id="google_chart_div" style="width: 100%; height: 350px;"></div>
+                                <div id="chart-data" data-fluxocaixa='<%- JSON.stringify(fluxoDeCaixaPorCategoria) %>'></div>
+                                
+                                <div style="width: 100%; overflow-x: auto !important;">
+                                    <div id="google_chart_div" style="height: 350px; min-width: 500px; width: 100%;"></div> 
+                                </div>
+
                             <% } else { %>
                                 <p class="text-center text-muted p-4">Adicione receitas e despesas para visualizar o fluxo de caixa.</p>
                             <% } %>
@@ -318,69 +323,7 @@
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     
     <% if (typeof user !== 'undefined' && user) { %>
-        <script type="text/javascript">
-            
-            // Verifica se há dados antes de tentar carregar o gráfico
-            <% if (locals.fluxoDeCaixaPorCategoria && locals.fluxoDeCaixaPorCategoria.length > 0) { %>
-                
-                google.charts.load('current', {'packages':['corechart']});
-                google.charts.setOnLoadCallback(drawChart);
-
-                function drawChart() {
-                    const fluxoData = <%- JSON.stringify(fluxoDeCaixaPorCategoria || []) %>;
-
-                    const dataArray = [['Categoria', 'Receitas', 'Despesas']];
-                    fluxoData.forEach(item => {
-                        dataArray.push([
-                            item.categoria,
-                            parseFloat(item.receita_total),
-                            parseFloat(item.despesa_total)
-                        ]);
-                    });
-
-                    const data = google.visualization.arrayToDataTable(dataArray);
-
-                    // ================================================================
-                    // 🛑 MUDANÇA PRINCIPAL AQUI: Opções do Gráfico
-                    // ================================================================
-                    const options = {
-                        legend: { position: 'top', textStyle: { color: '#495057' } },
-                        colors: ['#007bff', '#dc3545'], // Azul (Receita), Vermelho (Despesa)
-                        backgroundColor: 'transparent',
-
-                        // 🛑 MUDANÇA: Usando PIXELS fixos para as margens.
-                        // Isso é mais estável que porcentagens.
-                        chartArea: { 
-                            left: 50,    // <-- Deixa 50px para o "Valor (R$)"
-                            top: 40,     // <-- Deixa 40px para a Legenda
-                            right: 20,   // <-- Deixa 20px de "ar" na direita
-                            bottom: 50   // <-- Deixa 50px para a "Categoria"
-                        },
-
-                        vAxis: { 
-                            title: 'Valor (R$)', 
-                            minValue: 0, 
-                            gridlines: { color: '#eee' },
-                            textStyle: { color: '#6c757d' }
-                        },
-                        hAxis: { 
-                            title: 'Categoria',
-                            textStyle: { color: '#6c757d' }
-                        },
-                        bar: { groupWidth: '80%' }
-                    };
-                    // ================================================================
-                    // FIM DA MUDANÇA
-                    // ================================================================
-
-                    const chartElement = document.getElementById('google_chart_div');
-                    if (chartElement) {
-                        const chart = new google.visualization.ColumnChart(chartElement);
-                        chart.draw(data, options);
-                    }
-                }
-            <% } %>
-        </script>
+        <script src="/chart.js"></script>
     <% } %>
 
 </body>

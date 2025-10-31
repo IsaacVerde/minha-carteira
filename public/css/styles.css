@@ -58,15 +58,10 @@ h2 {
 
 /* --- GRÁFICOS --- */
 
-/* 🛑 MUDANÇA PRINCIPAL AQUI */
+/* 🛑 MUDANÇA: REMOVI o 'overflow: hidden' daqui */
 #google_chart_div, #expensesChart {
     width: 100% !important;
     max-height: 400px;
-    
-    /* "Corta" qualquer conteúdo que vazar para fora da div */
-    overflow: hidden !important; 
-    
-    /* Tenta centralizar a div (ajuda em alguns casos) */
     margin: 0 auto;
 }
 
