@@ -1,333 +1,389 @@
+
+
 <!DOCTYPE html>
 <html lang="pt-br">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    
-    <% if (typeof user !== 'undefined' && user) { %>
-        <title>Dashboard | Controle Financeiro</title>
-    <% } else { %>
-        <title>Login | Controle Financeiro</title>
-    <% } %>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <% if (typeof user !== 'undefined' && user) { %>
+        <title>Dashboard | Controle Financeiro</title>
+    <% } else { %>
+        <title>Login | Controle Financeiro</title>
+    <% } %>
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 
-    <link rel="stylesheet" href="/css/styles.css">
-    
+    <link rel="stylesheet" href="/css/styles.css">
+    
 
-    </head>
+    </head>
 
 <body class="bg-light">
 
-    <% if (typeof user !== 'undefined' && user) { %>
+    <% if (typeof user !== 'undefined' && user) { %>
 
-        <div class="container mt-4">
+        <div class="container mt-4">
 
-            <div class="header">
-                <h1>Bem-vindo, <%= user.email %></h1>
-                <form action="/logout" method="POST"><button type="submit" class="btn btn-danger btn-lg">Sair</button></form>
-            </div>
+            <div class="header">
+                <h1>Bem-vindo, <%= user.email %></h1>
+                <form action="/logout" method="POST"><button type="submit" class="btn btn-danger btn-lg">Sair</button></form>
+            </div>
 
-            <div class="card shadow-sm mb-4">
-                <div class="card-body">
-                    
-                    <form action="/dashboard" method="GET" class="d-flex flex-wrap gap-2 align-items-center mb-3">
-                        <h5 class="card-title text-secondary fw-bold me-3 mb-0 d-none d-md-block">Transações de <%= periodTitle %></h5>
-                        
-                        <label for="month_year_filter" class="form-label fw-bold mb-0">Visualizar Mês:</label>
-                        
-                        <input type="month" id="month_year_filter" name="month_year_filter" 
-                               value="<%= currentMonthYear %>" 
-                               class="form-control" 
-                               style="width: 180px;">
+            <div class="card shadow-sm mb-4">
+                <div class="card-body">
+                    
+                    <form action="/dashboard" method="GET" class="d-flex flex-wrap gap-2 align-items-center mb-3">
+                        <h5 class="card-title text-secondary fw-bold me-3 mb-0 d-none d-md-block">Transações de <%= periodTitle %></h5>
+                        
+                        <label for="month_year_filter" class="form-label fw-bold mb-0">Visualizar Mês:</label>
+                        
+                        <input type="month" id="month_year_filter" name="month_year_filter" 
+                               value="<%= currentMonthYear %>" 
+                               class="form-control" 
+                               style="width: 180px;">
 
-                        <button type="submit" class="btn btn-primary">Filtrar Mês</button>
-                    </form>
+                        <button type="submit" class="btn btn-primary">Filtrar Mês</button>
+                    </form>
 
-                    <hr>
+                    <hr>
 
-                    <div class="d-flex flex-wrap gap-2 align-items-center">
-                        <label class="form-label fw-bold mb-0">Visualizar Período:</label>
-                        <a href="/dashboard?period=7" class="btn btn-outline-secondary">Últimos 7 dias</a>
-                        <a href="/dashboard?period=30" class="btn btn-outline-secondary">Últimos 30 dias</a>
-                        <a href="/dashboard?period=365" class="btn btn-outline-secondary">Últimos 12 meses</a>
-                        <a href="/dashboard" class="btn btn-link ms-auto">Ver Mês Atual</a>
-                    </div>
+                    <div class="d-flex flex-wrap gap-2 align-items-center">
+                        <label class="form-label fw-bold mb-0">Visualizar Período:</label>
+                        <a href="/dashboard?period=7" class="btn btn-outline-secondary">Últimos 7 dias</a>
+                        <a href="/dashboard?period=30" class="btn btn-outline-secondary">Últimos 30 dias</a>
+                        <a href="/dashboard?period=365" class="btn btn-outline-secondary">Últimos 12 meses</a>
+                        <a href="/dashboard" class="btn btn-link ms-auto">Ver Mês Atual</a>
+                    </div>
 
-                </div>
-            </div>
-            <h2 class="mt-5">Resumo do Período</h2>
-            <div class="row g-3 mb-4">
-                <div class="col-md-4">
-                    <div class="card shadow-sm h-100">
-                        <div class="card-body">
-                            <h5 class="card-title text-secondary">Total Receitas</h5>
-                            <p class="valor-receita">R$ <%= resumo.totalReceitas %></p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card shadow-sm h-100">
-                        <div class="card-body">
-                            <h5 class="card-title text-secondary">Total Despesas</h5>
-                            <p class="valor-despesa">R$ <%= resumo.totalDespesas %></p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card shadow-sm h-100">
-                        <div class="card-body">
-                            <h5 class="card-title text-secondary">Saldo</h5>
-                            <p class="valor-saldo <%= (parseFloat(resumo.saldo) >= 0 ? 'color-blue' : 'color-red') %>">
-                                R$ <%= resumo.saldo %>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                </div>
+            </div>
+            <h2 class="mt-5">Resumo do Período</h2>
+            <div class="row g-3 mb-4">
+                <div class="col-md-4">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-body">
+                            <h5 class="card-title text-secondary">Total Receitas</h5>
+                            <p class="valor-receita">R$ <%= resumo.totalReceitas %></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-body">
+                            <h5 class="card-title text-secondary">Total Despesas</h5>
+                            <p class="valor-despesa">R$ <%= resumo.totalDespesas %></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-body">
+                            <h5 class="card-title text-secondary">Saldo</h5>
+                            <p class="valor-saldo <%= (parseFloat(resumo.saldo) >= 0 ? 'color-blue' : 'color-red') %>">
+                                R$ <%= resumo.saldo %>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-            <h2 class="mt-5">+ Nova Transação</h2>
-            <div class="card shadow-sm mb-4">
-                <div class="card-body p-4">
-                    <form action="/transactions" method="POST" class="row g-3">
-                        <input type="hidden" name="month_year_filter" value="<%= currentMonthYear %>">
+            <h2 class="mt-5">+ Nova Transação</h2>
+            <div class="card shadow-sm mb-4">
+                <div class="card-body p-4">
+                    <form action="/transactions" method="POST" class="row g-3">
+                        <input type="hidden" name="month_year_filter" value="<%= currentMonthYear %>">
 
-                        <% if (locals.message) { %>
-                            <div class="col-12">
-                                <p class="alert <%= (locals.message.includes('sucesso') ? 'alert-success' : 'alert-danger') %>">
-                                    <%= message %>
-                                </p>
-                            </div>
-                        <% } %>
-                        
-                        <div class="col-md-4">
-                            <label for="name" class="form-label">Nome da Transação</label>
-                            <input type="text" class="form-control" id="name" name="name" placeholder="Ex: Compra no mercado" required>
-                        </div>
-                        <div class="col-md-4">
-                            <label for="value" class="form-label">Valor (R$)</label>
-                            <input type="number" class="form-control" id="value" name="value" step="0.01" min="0.01" placeholder="0.00" required>
-                        </div>
-                        <div class="col-md-4">
-                            <label for="transaction_date" class="form-label">Data</label>
-                            <input type="date" class="form-control" id="transaction_date" name="transaction_date" required>
-                        </div>
-                        <div class="col-md-3">
-                            <label for="type" class="form-label">Tipo</label>
-                            <select id="type" name="type" class="form-select" required>
-                                <option value="Despesa" selected>Despesa</option>
-                                <option value="Receita">Receita</option>
-                            </select>
-                        </div>
-                        <div class="col-md-3">
-                            <label for="category" class="form-label">Categoria</label>
-                            <select id="category" name="category" class="form-select" required>
-                                <option value="Moradia">Moradia</option>
-                                <option value="Alimentação">Alimentação</option>
-                                <option value="Transporte">Transporte</option>
-                                <option value="Lazer">Lazer</option>
-                                <option value="Saúde">Saúde</option>
-                                <option value="Salário">Salário</option>
-                                <option value="Outros" selected>Outros</option>
-                            </select>
-                        </div>
-                        <div class="col-md-3">
-                            <label for="payment_method" class="form-label">Método de Pagamento</label>
-                            <select id="payment_method" name="payment_method" class="form-select" required>
-                                <option value="Cartão de Crédito">Cartão de Crédito</option>
-                                <option value="Débito">Débito</option>
-                                <option value="Dinheiro">Dinheiro</option>
-                                <option value="PIX">PIX</option>
-                                <option value="Boleto">Boleto</option>
-                            </select>
-                        </div>
-                        <div class="col-md-3">
-                            <label for="status" class="form-label">Status</label>
-                            <select id="status" name="status" class="form-select" required>
-                                <option value="Pago" selected>Pago</option>
-                                <option value="A Pagar">A Pagar / Pendente</option>
-                            </select>
-                        </div>
-                        
-                        <div class="col-12 mt-4">
-                            <button type="submit" class="btn btn-primary btn-lg w-100">Adicionar Transação</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
+                        <% if (locals.message) { %>
+                            <div class="col-12">
+                                <p class="alert <%= (locals.message.includes('sucesso') ? 'alert-success' : 'alert-danger') %>">
+                                    <%= message %>
+                                </p>
+                            </div>
+                        <% } %>
+                        
+                        <div class="col-md-4">
+                            <label for="name" class="form-label">Nome da Transação</label>
+                            <input type="text" class="form-control" id="name" name="name" placeholder="Ex: Compra no mercado" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="value" class="form-label">Valor (R$)</label>
+                            <input type="number" class="form-control" id="value" name="value" step="0.01" min="0.01" placeholder="0.00" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="transaction_date" class="form-label">Data</label>
+                            <input type="date" class="form-control" id="transaction_date" name="transaction_date" required>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="type" class="form-label">Tipo</label>
+                            <select id="type" name="type" class="form-select" required>
+                                <option value="Despesa" selected>Despesa</option>
+                                <option value="Receita">Receita</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="category" class="form-label">Categoria</label>
+                            <select id="category" name="category" class="form-select" required>
+                                <option value="Moradia">Moradia</option>
+                                <option value="Alimentação">Alimentação</option>
+                                <option value="Transporte">Transporte</option>
+                                <option value="Lazer">Lazer</option>
+                                <option value="Saúde">Saúde</option>
+                                <option value="Salário">Salário</option>
+                                <option value="Outros" selected>Outros</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="payment_method" class="form-label">Método de Pagamento</label>
+                            <select id="payment_method" name="payment_method" class="form-select" required>
+                                <option value="Cartão de Crédito">Cartão de Crédito</option>
+                                <option value="Débito">Débito</option>
+                                <option value="Dinheiro">Dinheiro</option>
+                                <option value="PIX">PIX</option>
+                                <option value="Boleto">Boleto</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="status" class="form-label">Status</label>
+                            <select id="status" name="status" class="form-select" required>
+                                <option value="Pago" selected>Pago</option>
+                                <option value="A Pagar">A Pagar / Pendente</option>
+                            </select>
+                        </div>
+                        
+                        <div class="col-12 mt-4">
+                            <button type="submit" class="btn btn-primary btn-lg w-100">Adicionar Transação</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
 
-            <div class="row g-3 mb-4 mt-5">
-                <div class="col-lg-6">
-                    <h2 class="h4">Gasto Total por Categoria</h2>
-                    <div class="card shadow-sm h-100">
-                        <div class="card-body">
-                            <div class="table-responsive"> 
-                                <table class="table align-middle">
-                                    <thead>
-                                        <tr>
-                                            <th>Categoria</th>
-                                            <th>Receitas (R$)</th>
-                                            <th>Despesas (R$)</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <% if (locals.fluxoDeCaixaPorCategoria && locals.fluxoDeCaixaPorCategoria.length > 0) { %>
-                                            <% fluxoDeCaixaPorCategoria.forEach(item => { 
-                                                const receita = parseFloat(item.receita_total);
-                                                const despesa = parseFloat(item.despesa_total);
-                                            %>
-                                                <tr>
-                                                    <td><%= item.categoria %></td>
-                                                    <td class="color-blue">R$ <%= receita.toFixed(2) %></td>
-                                                    <td class="color-red">R$ <%= despesa.toFixed(2) %></td>
-                                                </tr>
-                                            <% }); %>
-                                        <% } else { %>
-                                            <tr>
-                                                <td colspan="3" class="text-center text-muted p-4">Nenhuma transação categorizada.</td>
-                                            </tr>
-                                        <% } %>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="col-lg-6">
-                    <h2 class="h4">Gráfico de Fluxo de Caixa</h2>
-                    <div class="card shadow-sm h-100">
-                        <div class="card-body">
-                            <% if (locals.fluxoDeCaixaPorCategoria && locals.fluxoDeCaixaPorCategoria.length > 0) { %>
-                                
-                                <div id="chart-data" data-fluxocaixa='<%- JSON.stringify(fluxoDeCaixaPorCategoria) %>'></div>
-                                
-                                <div class="chart-scroll-wrapper">
-                                
-                                    <div id="google_chart_div" style="height: 350px; min-width: 500px; width: 100%;"></div> 
-                                
-                                </div>
+            <div class="row g-3 mb-4 mt-5">
+                <div class="col-lg-6">
+                    <h2 class="h4">Gasto Total por Categoria</h2>
+                    <div class="card shadow-sm h-100">
+                        <div class="card-body">
+                            <div class="table-responsive"> 
+                                <table class="table align-middle">
+                                    <thead>
+                                        <tr>
+                                            <th>Categoria</th>
+                                            <th>Receitas (R$)</th>
+                                            <th>Despesas (R$)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% if (locals.fluxoDeCaixaPorCategoria && locals.fluxoDeCaixaPorCategoria.length > 0) { %>
+                                            <% fluxoDeCaixaPorCategoria.forEach(item => { 
+                                                const receita = parseFloat(item.receita_total);
+                                                const despesa = parseFloat(item.despesa_total);
+                                            %>
+                                                <tr>
+                                                    <td><%= item.categoria %></td>
+                                                    <td class="color-blue">R$ <%= receita.toFixed(2) %></td>
+                                                    <td class="color-red">R$ <%= despesa.toFixed(2) %></td>
+                                                </tr>
+                                            <% }); %>
+                                        <% } else { %>
+                                            <tr>
+                                                <td colspan="3" class="text-center text-muted p-4">Nenhuma transação categorizada.</td>
+                                            </tr>
+                                        <% } %>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-6">
+                    <h2 class="h4">Gráfico de Fluxo de Caixa</h2>
+                    <div class="card shadow-sm h-100">
+                        <div class="card-body">
+                            <% if (locals.fluxoDeCaixaPorCategoria && locals.fluxoDeCaixaPorCategoria.length > 0) { %>
+                                <div id="google_chart_div" style="width: 100%; height: 350px;"></div>
+                            <% } else { %>
+                                <p class="text-center text-muted p-4">Adicione receitas e despesas para visualizar o fluxo de caixa.</p>
+                            <% } %>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-                            <% } else { %>
-                                <p class="text-center text-muted p-4">Adicione receitas e despesas para visualizar o fluxo de caixa.</p>
-                            <% } %>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <h2 class="text-center mt-5 mb-3">☰ Todas as Transações</h2>
+            <div class="card shadow-sm mb-5">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table align-middle table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Nome</th><th>Tipo</th><th>Categoria</th><th>Valor (R$)</th><th>Data</th><th>Pagamento</th><th>Status</th><th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% if (locals.todasTransacoes && locals.todasTransacoes.length > 0) { %>
+                                    <% todasTransacoes.forEach(transacao => { %>
+                                        <tr class="<%= (transacao.tipo === 'Receita' ? 'row-receita' : 'row-despesa') %>">
+                                            <td><%= transacao.nome %></td>
+                                            <td><%= transacao.tipo %></td>
+                                            <td><%= transacao.categoria %></td>
+                                            <td class="<%= (transacao.tipo === 'Receita' ? 'color-blue' : 'color-red') %> fw-bold">
+                                                R$ <%= parseFloat(transacao.valor).toFixed(2) %>
+                                            </td>
+                                            <td><%= transacao.data_formatada %></td>
+                                            <td><%= transacao.metodo_pagamento %></td>
+                                            <td><%= transacao.status %></td>
+                                            <td>
+                                                <form action="/transactions/delete" method="POST" style="display: inline;">
+                                                    <input type="hidden" name="id" value="<%= transacao.id %>">
+                                                    <input type="hidden" name="month_year_filter" value="<%= currentMonthYear %>">
+                                                    <button type="submit" class="btn btn-danger btn-sm">Deletar</button>
+                                                </form>
+                                                <a href="/transactions/edit/<%= transacao.id %>?filter=<%= currentMonthYear %>">
+                                                    <button type="button" class="btn btn-primary btn-sm">Editar</button>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    <% }); %>
+                                <% } else { %>
+                                    <tr>
+                                        <td colspan="8" class="text-center text-muted p-4">Nenhuma transação registrada neste período.</td>
+                                    </tr>
+                                <% } %>
+                                
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
 
-            <h2 class="text-center mt-5 mb-3">☰ Todas as Transações</h2>
-            <div class="card shadow-sm mb-5">
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table align-middle table-hover">
-                            <thead>
-                                <tr>
-                                    <th>Nome</th><th>Tipo</th><th>Categoria</th><th>Valor (R$)</th><th>Data</th><th>Pagamento</th><th>Status</th><th>Ações</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <% if (locals.todasTransacoes && locals.todasTransacoes.length > 0) { %>
-                                    <% todasTransacoes.forEach(transacao => { %>
-                                        <tr class="<%= (transacao.tipo === 'Receita' ? 'row-receita' : 'row-despesa') %>">
-                                            <td><%= transacao.nome %></td>
-                                            <td><%= transacao.tipo %></td>
-                                            <td><%= transacao.categoria %></td>
-                                            <td class="<%= (transacao.tipo === 'Receita' ? 'color-blue' : 'color-red') %> fw-bold">
-                                                R$ <%= parseFloat(transacao.valor).toFixed(2) %>
-                                            </td>
-                                            <td><%= transacao.data_formatada %></td>
-                                            <td><%= transacao.metodo_pagamento %></td>
-                                            <td><%= transacao.status %></td>
-                                            <td>
-                                                <form action="/transactions/delete" method="POST" style="display: inline;">
-                                                    <input type="hidden" name="id" value="<%= transacao.id %>">
-                                                    <input type="hidden" name="month_year_filter" value="<%= currentMonthYear %>">
-                                                    <button type="submit" class="btn btn-danger btn-sm">Deletar</button>
-                                                </form>
-                                                <a href="/transactions/edit/<%= transacao.id %>?filter=<%= currentMonthYear %>">
-                                                    <button type="button" class="btn btn-primary btn-sm">Editar</button>
-                                                </a>
-                                            </td>
-                                        </tr>
-                                    <% }); %>
-                                <% } else { %>
-                                    <tr>
-                                        <td colspan="8" class="text-center text-muted p-4">Nenhuma transação registrada neste período.</td>
-                                    </tr>
-                                <% } %>
-                                
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
+        </div> 
 
-        </div> 
+    <% } else { %>
 
-    <% } else { %>
+        <div class="container vh-100 d-flex align-items-center justify-content-center">
+            <div class="row w-100" style="max-width: 900px;"> <% if (locals.message) { %>
+                    <div class="col-12 mb-3">
+                        <p class="alert <%= (locals.message.includes('sucesso') ? 'alert-success' : 'alert-danger') %> text-center">
+                            <%= message %>
+                        </p>
+                    </div>
+                <% } %>
 
-        <div class="container vh-100 d-flex align-items-center justify-content-center">
-            <div class="row w-100" style="max-width: 900px;"> <% if (locals.message) { %>
-                    <div class="col-12 mb-3">
-                        <p class="alert <%= (locals.message.includes('sucesso') ? 'alert-success' : 'alert-danger') %> text-center">
-                            <%= message %>
-                        </p>
-                    </div>
-                <% } %>
+                <div class="col-lg-6 mb-4 mb-lg-0">
+                    <div class="card shadow-sm">
+                        <div class="card-body p-4 p-md-5">
+                            <h2 class="text-center mb-4">Login</h2>
+                            <form action="/login" method="POST">
+                                <div class="mb-3">
+                                    <label for="login_email" class="form-label">Email</label>
+                                    <input type="email" class="form-control" id="login_email" name="email" placeholder="seu@email.com" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="login_password" class="form-label">Senha</label>
+                                    <input type="password" class="form-control" id="login_password" name="password" required>
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-lg w-100 mt-3">Entrar</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
 
-                <div class="col-lg-6 mb-4 mb-lg-0">
-                    <div class="card shadow-sm">
-                        <div class="card-body p-4 p-md-5">
-                            <h2 class="text-center mb-4">Login</h2>
-                            <form action="/login" method="POST">
-                                <div class="mb-3">
-                                    <label for="login_email" class="form-label">Email</label>
-                                    <input type="email" class="form-control" id="login_email" name="email" placeholder="seu@email.com" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="login_password" class="form-label">Senha</label>
-                                    <input type="password" class="form-control" id="login_password" name="password" required>
-                                </div>
-                                <button type="submit" class="btn btn-primary btn-lg w-100 mt-3">Entrar</button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
+                <div class="col-lg-6">
+                    <div class="card shadow-sm">
+                        <div class="card-body p-4 p-md-5">
+                            <h2 class="text-center mb-4">Registrar-se</h2>
+                            <p class="text-center text-muted mb-4">Novo por aqui? Crie sua conta.</p>
+                            <form action="/register" method="POST">
+                                <div class="mb-3">
+                                    <label for="reg_email" class="form-label">Email</label>
+                                    <input type="email" class="form-control" id="reg_email" name="email" placeholder="seu@email.com" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="reg_password" class="form-label">Senha</label>
+                                    <input type="password" class="form-control" id="reg_password" name="password" required>
+                                </div>
+                                <button type="submit" class="btn btn-outline-primary btn-lg w-100 mt-3">Criar Conta</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
 
-                <div class="col-lg-6">
-                    <div class="card shadow-sm">
-                        <div class="card-body p-4 p-md-5">
-                            <h2 class="text-center mb-4">Registrar-se</h2>
-                            <p class="text-center text-muted mb-4">Novo por aqui? Crie sua conta.</p>
-                            <form action="/register" method="POST">
-                                <div class="mb-3">
-                                    <label for="reg_email" class="form-label">Email</label>
-                                    <input type="email" class="form-control" id="reg_email" name="email" placeholder="seu@email.com" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="reg_password" class="form-label">Senha</label>
-                                    <input type="password" class="form-control" id="reg_password" name="password" required>
-                                </div>
-                                <button type="submit" class="btn btn-outline-primary btn-lg w-100 mt-3">Criar Conta</button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
+            </div>
+        </div>
 
-            </div>
-        </div>
+    <% } %>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    
+    <% if (typeof user !== 'undefined' && user) { %>
+        <script type="text/javascript">
+            
+            // Verifica se há dados antes de tentar carregar o gráfico
+            <% if (locals.fluxoDeCaixaPorCategoria && locals.fluxoDeCaixaPorCategoria.length > 0) { %>
+                
+                google.charts.load('current', {'packages':['corechart']});
+                google.charts.setOnLoadCallback(drawChart);
 
-    <% } %>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-    
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-    
-    <% if (typeof user !== 'undefined' && user) { %>
-        <script src="/chart.js"></script>
-    <% } %>
+                function drawChart() {
+                    const fluxoData = <%- JSON.stringify(fluxoDeCaixaPorCategoria || []) %>;
+
+                    const dataArray = [['Categoria', 'Receitas', 'Despesas']];
+                    fluxoData.forEach(item => {
+                        dataArray.push([
+                            item.categoria,
+                            parseFloat(item.receita_total),
+                            parseFloat(item.despesa_total)
+                        ]);
+                    });
+
+                    const data = google.visualization.arrayToDataTable(dataArray);
+
+                    // ================================================================
+                    // 🛑 MUDANÇA PRINCIPAL AQUI: Opções do Gráfico
+                    // ================================================================
+                    const options = {
+                        legend: { position: 'top', textStyle: { color: '#495057' } },
+                        colors: ['#007bff', '#dc3545'], // Azul (Receita), Vermelho (Despesa)
+                        backgroundColor: 'transparent',
+
+                        // 🛑 MUDANÇA: Usando PIXELS fixos para as margens.
+                        // Isso é mais estável que porcentagens.
+                        chartArea: { 
+                            left: 50,    // <-- Deixa 50px para o "Valor (R$)"
+                            top: 40,     // <-- Deixa 40px para a Legenda
+                            right: 20,   // <-- Deixa 20px de "ar" na direita
+                            bottom: 50   // <-- Deixa 50px para a "Categoria"
+                        },
+
+                        vAxis: { 
+                            title: 'Valor (R$)', 
+                            minValue: 0, 
+                            gridlines: { color: '#eee' },
+                            textStyle: { color: '#6c757d' }
+                        },
+                        hAxis: { 
+                            title: 'Categoria',
+                            textStyle: { color: '#6c757d' }
+                        },
+                        bar: { groupWidth: '80%' }
+                    };
+                    // ================================================================
+                    // FIM DA MUDANÇA
+                    // ================================================================
+
+                    const chartElement = document.getElementById('google_chart_div');
+                    if (chartElement) {
+                        const chart = new google.visualization.ColumnChart(chartElement);
+                        chart.draw(data, options);
+                    }
+                }
+            <% } %>
+        </script>
+    <% } %>
 
 </body>
 </html>
