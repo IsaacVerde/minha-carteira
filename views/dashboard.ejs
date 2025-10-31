@@ -348,12 +348,13 @@
                         colors: ['#007bff', '#dc3545'], // Azul (Receita), Vermelho (Despesa)
                         backgroundColor: 'transparent',
 
-                        // 🛑 MUDANÇA: Usando porcentagens para forçar o ajuste
+                        // 🛑 MUDANÇA: Usando PIXELS fixos para as margens.
+                        // Isso é mais estável que porcentagens.
                         chartArea: { 
-                            left: '18%',  // <-- MUDANÇA: Dá espaço para os valores R$
-                            top: '15%',   // <-- MUDANÇA: Dá espaço para a legenda
-                            width: '80%', // <-- MUDANÇA: Usa 80% do espaço, deixando 'ar' na direita
-                            height: '65%' // <-- MUDANÇA: Usa 65% da altura para o gráfico
+                            left: 50,    // <-- Deixa 50px para o "Valor (R$)"
+                            top: 40,     // <-- Deixa 40px para a Legenda
+                            right: 20,   // <-- Deixa 20px de "ar" na direita
+                            bottom: 50   // <-- Deixa 50px para a "Categoria"
                         },
 
                         vAxis: { 

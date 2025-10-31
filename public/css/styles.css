@@ -4,10 +4,10 @@
 
 /* --- VARIÁVEIS (PADRÃO DE CORES) --- */
 :root {
-    --bs-primary: #007bff; /* Azul profissional para Receita, Botões Primários */
-    --bs-danger: #dc3545;  /* Vermelho profissional para Despesa, Botões de Perigo */
-    --color-border: #dee2e6; /* Cor padrão para bordas leves (usada em h2 e tabelas) */
-    --bs-text-primary: #212529; /* Cor padrão do texto (quase preto) */
+    --bs-primary: #007bff;
+    --bs-danger: #dc3545; 
+    --color-border: #dee2e6;
+    --bs-text-primary: #212529;
 }
 
 
@@ -81,12 +81,16 @@ h2 {
         word-break: break-all; 
     }
 
-    /* 3. TÍTULOS DE SEÇÃO (AQUI A MUDANÇA) */
+    /* 3. TÍTULOS DE SEÇÃO */
     h2, .h4 {
-        font-size: 1.25rem; /* <-- MUDANÇA: Reduzindo mais */
-        margin-top: 2.5rem; /* <-- MUDANÇA: Mais espaço *antes* */
-        margin-bottom: 1rem; /* <-- MUDANÇA: Mais espaço *depois* */
-        text-align: center; /* <-- MUDANÇA: Centraliza para melhor visualização */
+        font-size: 1.25rem; 
+        margin-top: 2.5rem; 
+        margin-bottom: 1rem; 
+        text-align: center; 
+    }
+    .text-center.mt-5.mb-3 {
+        margin-top: 2.5rem !important;
+        font-size: 1.25rem; 
     }
 
     /* 4. Valores do Resumo */
@@ -105,6 +109,8 @@ h2 {
     #google_chart_div {
         height: 300px !important; 
     }
+    /* 🛑 MUDANÇA: REMOVI A REGRA 'display: flex' DAQUI. */
+
 
     /* 7. Filtros */
     .card-body .form-control {
