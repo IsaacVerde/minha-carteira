@@ -10,6 +10,8 @@ const bcrypt = require('bcrypt');
 const saltRounds = 10; 
 const session = require('express-session');
 
+// 🛑 IMPORTAÇÃO DO CONECTOR DE SESSÃO
+const pgSession = require('connect-pg-simple')(session);
 
 // Variáveis de lista (Definidas globalmente para uso em EJS)
 const categorias = ['Alimentação', 'Transporte', 'Moradia', 'Lazer', 'Saúde', 'Salário', 'Outros'];
@@ -40,14 +42,20 @@ const db = new Pool({
     }
 });
 
-// Configuração do Middleware de Sessão
+// 🛑 FIX 1: Configuração do Middleware de Sessão (CORRIGIDO PARA USAR O BANCO)
+const sessionStore = new pgSession({
+    pool: db,                // Usa seu Pool de conexão 'db' do Supabase
+    tableName: 'user_sessions' // Nome da tabela que ele vai usar
+});
+
 app.use(session({
+    store: sessionStore, // <-- Agora salva a sessão no Supabase
     secret: process.env.SESSION_SECRET || '4faYZfS3IStvEfP',
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: false, // Alterado para 'false' (melhor prática)
     cookie: { 
-        maxAge: 600000,
-        secure: process.env.NODE_ENV === 'production'
+        maxAge: 600000, // 10 minutos
+        secure: true // DEVE ser 'true' para Vercel/HTTPS
     }
 }));
 
@@ -109,6 +117,7 @@ app.get("/login", (req, res) => {
     res.redirect("/dashboard"); 
 });
 
+// 🛑 FIX 2: ROTA DE LOGIN (CORRIGIDA PARA ESPERAR O SALVAMENTO DA SESSÃO)
 app.post("/login", async (req, res) => {
     const { email, password } = req.body;
     try {
@@ -123,9 +132,21 @@ app.post("/login", async (req, res) => {
         const match = await bcrypt.compare(password, user.senha_hash);
         
         if (match) {
+            // 1. Define o usuário na sessão
             req.session.user = { id: user.id, email: user.email };
-            // CORRETO: Esta rota já redirecionava para /dashboard
-            return res.redirect("/dashboard");
+
+            // 2. FORÇA O SALVAMENTO ANTES DE REDIRECIONAR
+            req.session.save((err) => {
+                if (err) {
+                    // Se der erro ao salvar a sessão, lide com ele
+                    console.error("Erro ao salvar a sessão:", err.message);
+                    return res.redirect("/dashboard?err=Ocorreu_um_erro_interno_durante_o_login.");
+                }
+                
+                // 3. Só redireciona DEPOIS que a sessão foi salva com sucesso
+                return res.redirect("/dashboard");
+            });
+
         } else {
             // MUDANÇA: Redireciona de volta ao dashboard com erro
             return res.redirect("/dashboard?err=Email_ou_senha_incorretos.");
