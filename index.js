@@ -42,20 +42,24 @@ const db = new Pool({
     }
 });
 
-// 🛑 FIX 1: Configuração do Middleware de Sessão (CORRIGIDO PARA USAR O BANCO)
+// 🛑 Configuração do Middleware de Sessão (CORRIGIDO PARA USAR O BANCO)
 const sessionStore = new pgSession({
     pool: db,                // Usa seu Pool de conexão 'db' do Supabase
     tableName: 'user_sessions' // Nome da tabela que ele vai usar
 });
 
+// 🛑 MUDANÇA FINAL: TORNANDO O COOKIE MAIS EXPLÍCITO
+app.set('trust proxy', 1); // Confia no proxy da Vercel
 app.use(session({
-    store: sessionStore, // <-- Agora salva a sessão no Supabase
+    store: sessionStore, 
     secret: process.env.SESSION_SECRET || '4faYZfS3IStvEfP',
     resave: false,
-    saveUninitialized: false, // Alterado para 'false' (melhor prática)
+    saveUninitialized: false,
+    name: 'minha-carteira-sessao', // <-- Nome explícito para o cookie
     cookie: { 
-        maxAge: 600000, // 10 minutos
-        secure: true // DEVE ser 'true' para Vercel/HTTPS
+        maxAge: 30 * 24 * 60 * 60 * 1000, // 30 dias (aumentei o tempo)
+        secure: true, // DEVE ser 'true' para Vercel/HTTPS
+        sameSite: 'none' // <-- Necessário para cross-site/proxy
     }
 }));
 
@@ -117,7 +121,7 @@ app.get("/login", (req, res) => {
     res.redirect("/dashboard"); 
 });
 
-// 🛑 FIX 2: ROTA DE LOGIN (CORRIGIDA PARA ESPERAR O SALVAMENTO DA SESSÃO)
+// 🛑 ROTA DE LOGIN (COM O CÓDIGO DE EXIBIR ERRO NA URL)
 app.post("/login", async (req, res) => {
     const { email, password } = req.body;
     try {
@@ -138,7 +142,6 @@ app.post("/login", async (req, res) => {
             // 2. FORÇA O SALVAMENTO ANTES DE REDIRECIONAR
             req.session.save((err) => {
                 if (err) {
-                    // <<<<<<<<<<<< A MUDANÇA ESTÁ AQUI >>>>>>>>>>>>>
                     console.error("Erro ao salvar a sessão:", err.message);
                     // Formata a mensagem de erro para a URL
                     const erroFormatado = encodeURIComponent(err.message).replace(/%20/g, '_');
@@ -166,8 +169,8 @@ app.post("/logout", (req, res) => {
         if (err) {
             console.error("Erro ao destruir a sessão:", err);
         }
-        // Limpa o cookie da sessão para garantir o logout completo
-        res.clearCookie('connect.sid'); 
+        // 🛑 MUDANÇA FINAL: Limpa o cookie com o nome explícito
+        res.clearCookie('minha-carteira-sessao'); 
         
         // MUDANÇA: Redireciona para /dashboard com mensagem de sucesso
         return res.redirect("/dashboard?msg=Logout_realizado_com_sucesso.");
