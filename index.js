@@ -138,9 +138,12 @@ app.post("/login", async (req, res) => {
             // 2. FORÇA O SALVAMENTO ANTES DE REDIRECIONAR
             req.session.save((err) => {
                 if (err) {
-                    // Se der erro ao salvar a sessão, lide com ele
+                    // <<<<<<<<<<<< A MUDANÇA ESTÁ AQUI >>>>>>>>>>>>>
                     console.error("Erro ao salvar a sessão:", err.message);
-                    return res.redirect("/dashboard?err=Ocorreu_um_erro_interno_durante_o_login.");
+                    // Formata a mensagem de erro para a URL
+                    const erroFormatado = encodeURIComponent(err.message).replace(/%20/g, '_');
+                    // Envia o erro real para a URL
+                    return res.redirect("/dashboard?err=ERRO_SESSAO:_" + erroFormatado);
                 }
                 
                 // 3. Só redireciona DEPOIS que a sessão foi salva com sucesso
