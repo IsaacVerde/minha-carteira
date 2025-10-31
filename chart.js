@@ -1,11 +1,12 @@
-// chart.js (LÓGICA DO GOOGLE CHARTS - NÃO CHART.JS)
+// chart.js (LÓGICA DO GOOGLE CHARTS - CORRIGIDO PARA RESPONSIVIDADE)
 
-// 1. Carrega a biblioteca (pacote 'corechart' para gráficos de barra/coluna)
+// 1. Carrega a biblioteca
 google.charts.load('current', {'packages':['corechart']});
 
-// 2. Define a função de desenho para ser chamada quando a biblioteca carregar
-google.charts.setOnLoadCallback(drawChart);
+// 2. Define a função de PREPARAÇÃO para ser chamada quando a biblioteca carregar
+google.charts.setOnLoadCallback(setupChart);
 
+// 3. Define a função que desenha o gráfico
 function drawChart() {
     // 3. Pega os dados do EJS (lendo do atributo data-*)
     const dataElement = document.getElementById('chart-data');
@@ -32,12 +33,20 @@ function drawChart() {
 
         const data = google.visualization.arrayToDataTable(dataArray);
 
-        // 5. Opções de Estilo (Paleta Azul/Vermelho)
+        // 5. 🛑 MUDANÇA: Opções de Estilo (COM PIXELS FIXOS PARA ESTABILIDADE)
         const options = {
             legend: { position: 'top', textStyle: { color: '#495057' } },
             colors: ['#007bff', '#dc3545'], // Azul (Receita), Vermelho (Despesa)
             backgroundColor: 'transparent', 
-            chartArea: {width: '85%', height: '70%'},
+            
+            // 🛑 MUDANÇA: Usando PIXELS fixos. Isso é mais estável.
+            chartArea: { 
+                left: 50,    // <-- Deixa 50px para o "Valor (R$)"
+                top: 40,     // <-- Deixa 40px para a Legenda
+                right: 20,   // <-- Deixa 20px de "ar" na direita
+                bottom: 50   // <-- Deixa 50px para a "Categoria"
+            },
+            
             vAxis: { 
                 title: 'Valor (R$)', 
                 minValue: 0, 
@@ -60,4 +69,15 @@ function drawChart() {
             console.error("Elemento 'google_chart_div' não encontrado para desenhar o gráfico.");
         }
     }
+}
+
+// 7. 🛑 MUDANÇA: Função que PREPARA o gráfico e o torna responsivo
+function setupChart() {
+    // Desenha o gráfico pela primeira vez
+    drawChart();
+    
+    // Adiciona um "ouvinte" que chama 'drawChart'
+    // toda vez que a janela do navegador mudar de tamanho.
+    // Isso é o que torna o gráfico responsivo.
+    window.addEventListener('resize', drawChart);
 }
