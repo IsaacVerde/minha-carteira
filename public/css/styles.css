@@ -77,6 +77,8 @@ h2 {
 #google_chart_div, #expensesChart {
     width: 100% !important;
     max-height: 400px;
+    /* A altura é controlada pelo 'height: 350px' inline no EJS, 
+       mas vamos sobrescrever isso no mobile */
 }
 
 /* --- RESPONSIVIDADE EM TELAS PEQUENAS (max-width: 768px) --- */
@@ -97,12 +99,15 @@ h2 {
 
     /* Reduz o tamanho da fonte do h1 */
     .header h1 {
-        font-size: 1.5rem;
+        font-size: 1.7rem; /* <-- MUDANÇA: Um pouco maior que os H2 */
+        word-break: break-all; /* <-- MUDANÇA: Impede que emails longos quebrem o layout */
     }
 
     /* Reduz o tamanho da fonte dos títulos das seções */
     h2, .h4 {
-        font-size: 1.5rem;
+        font-size: 1.3rem; /* <-- MUDANÇA: Um pouco menor para caber */
+        margin-top: 2rem; /* <-- MUDANÇA: Menos espaço em cima no mobile */
+        margin-bottom: 0.5rem; /* <-- MUDANÇA: Garante espaço abaixo */
     }
 
     /* 3. Valores do Resumo */
@@ -112,7 +117,18 @@ h2 {
         font-size: 1.8em; /* Reduz ligeiramente os valores para caberem melhor */
     }
 
-    /* 4. Filtros */
+    /* 4. Padding dos Cards */
+    .card-body {
+        padding: 1rem !important; /* <-- MUDANÇA: Reduz o padding interno no mobile */
+    }
+
+    /* 5. Gráfico */
+    #google_chart_div {
+        /* Sobrescreve a altura inline de 350px do EJS, que é muito alta para mobile */
+        height: 300px !important; /* <-- MUDANÇA */
+    }
+
+    /* 6. Filtros */
     /* Garante que o input de mês ocupe a largura total no mobile */
     .card-body .form-control {
         width: 100% !important;
@@ -123,7 +139,7 @@ h2 {
         text-align: center;
     }
 
-    /* 5. Login/Registro (na tela inicial) */
+    /* 7. Login/Registro (na tela inicial) */
     .container.vh-100 .row {
         width: 100% !important;
         margin: 0;
