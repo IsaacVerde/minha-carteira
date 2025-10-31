@@ -250,6 +250,7 @@
                                         <td colspan="8" class="text-center text-muted p-4">Nenhuma transação registrada neste período.</td>
                                     </tr>
                                 <% } %>
+                                
                             </tbody>
                         </table>
                     </div>
@@ -347,12 +348,12 @@
                         colors: ['#007bff', '#dc3545'], // Azul (Receita), Vermelho (Despesa)
                         backgroundColor: 'transparent',
 
-                        // Define "margens" explícitas para o gráfico não cortar os rótulos
+                        // 🛑 MUDANÇA: Usando porcentagens para forçar o ajuste
                         chartArea: { 
-                            left: 55,  // Espaço para os labels do eixo Y (ex: "Valor (R$)")
-                            top: 40,   // Espaço para a legenda (ex: "Receitas")
-                            width: '80%', // Largura da área das barras
-                            height: '65%' // Altura da área das barras
+                            left: '18%',  // <-- MUDANÇA: Dá espaço para os valores R$
+                            top: '15%',   // <-- MUDANÇA: Dá espaço para a legenda
+                            width: '80%', // <-- MUDANÇA: Usa 80% do espaço, deixando 'ar' na direita
+                            height: '65%' // <-- MUDANÇA: Usa 65% da altura para o gráfico
                         },
 
                         vAxis: { 
