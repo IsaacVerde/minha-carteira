@@ -10,6 +10,7 @@ const bcrypt = require('bcrypt');
 const saltRounds = 10; 
 const session = require('express-session');
 
+
 // Variáveis de lista (Definidas globalmente para uso em EJS)
 const categorias = ['Alimentação', 'Transporte', 'Moradia', 'Lazer', 'Saúde', 'Salário', 'Outros'];
 const metodosPagamento = ['Cartão de Crédito', 'Débito', 'Dinheiro', 'PIX', 'Boleto'];
@@ -27,18 +28,21 @@ app.use(express.static(__dirname));
 app.use(express.static(path.join(__dirname, 'public'))); 
 
 
-// Conexão com o PostgreSQL
+// Conexão com o PostgreSQL (CORRIGIDO PARA SUPABASE/NUVEM)
 const db = new Pool({
     user: process.env.DB_USER,
     host: process.env.DB_HOST,
     database: process.env.DB_DATABASE,
     password: process.env.DB_PASSWORD,
     port: process.env.DB_PORT,
+    ssl: {
+        rejectUnauthorized: false // Necessário para a Vercel se conectar ao Supabase
+    }
 });
 
 // Configuração do Middleware de Sessão
 app.use(session({
-    secret: process.env.SESSION_SECRET || 'chave_muito_secreta_padrao_dev',
+    secret: process.env.SESSION_SECRET || '4faYZfS3IStvEfP',
     resave: false,
     saveUninitialized: true,
     cookie: { 
